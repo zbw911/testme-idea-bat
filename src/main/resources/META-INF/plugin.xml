@@ -63,5 +63,9 @@
            <!--icon="/icons/TestMe.png" description="TestMe test generators">-->
       <!--<add-to-group group-id="GenerateGroup" relative-to-action="GenerateCopyright" anchor="after" />-->
     <!--</group>-->
+    <action id="all_test_id" class="com.weirddev.testme.intellij.action.CreateAllTest" text="全部测试"
+            description="全部测试">
+      <add-to-group group-id="ToolsMenu" anchor="first"/>
+    </action>
   </actions>
 </idea-plugin>

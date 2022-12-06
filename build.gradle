@@ -175,6 +175,10 @@ idea {
     }
 }
 
+runIde {
+    jvmArgs '--add-exports', 'java.base/jdk.internal.vm=ALL-UNNAMED'
+}
+
 dependencies {
     implementation(project(':testme-intellij-common')){
         exclude group:'com.jetbrains', module: 'ideaIC'

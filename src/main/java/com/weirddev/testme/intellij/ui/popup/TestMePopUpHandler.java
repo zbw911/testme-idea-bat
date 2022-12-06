@@ -219,7 +219,7 @@ public abstract class TestMePopUpHandler implements CodeInsightActionHandler {
     }
   }
 
-  private static class DefaultPsiElementListCellRenderer extends PsiElementListCellRenderer {
+  public static class DefaultPsiElementListCellRenderer extends PsiElementListCellRenderer {
     @Override
     public String getElementText(final PsiElement element) {
       if (element instanceof PsiNamedElement) {
