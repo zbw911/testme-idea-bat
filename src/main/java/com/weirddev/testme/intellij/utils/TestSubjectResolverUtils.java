@@ -25,9 +25,16 @@ public class TestSubjectResolverUtils {
         return testableElement == null ? file.findElementAt(0) : testableElement;
     }
 
+    @Nullable
+    public static PsiElement getTestableElement(@NotNull PsiFile file) {
+//        PsiElement selectedElement = PsiUtilCore.getElementAtOffset(file, editor.getCaretModel().getOffset());
+        final PsiElement testableElement = findTestableElement(file);
+        return testableElement == null ? file.findElementAt(0) : testableElement;
+    }
+
     public static boolean isValidForTesting(Editor editor, PsiFile file) {
         PsiElement selectedElement = PsiUtilCore.getElementAtOffset(file, editor.getCaretModel().getOffset());
-        return findTestableElement(selectedElement)!=null;
+        return findTestableElement(selectedElement) != null;
     }
 
     public static PsiElement findTestableElement(PsiElement selectedElement) {

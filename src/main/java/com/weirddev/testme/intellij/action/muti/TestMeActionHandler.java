@@ -2,6 +2,7 @@ package com.weirddev.testme.intellij.action.muti;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.pom.Navigatable;
@@ -15,7 +16,7 @@ import com.intellij.testIntegration.TestFinderHelper;
 import com.intellij.util.SmartList;
 import com.weirddev.testme.intellij.TestMeBundle;
 import com.weirddev.testme.intellij.action.CreateTestMeAction;
-import com.weirddev.testme.intellij.action.TestMeAdditionalAction;
+
 import com.weirddev.testme.intellij.template.TemplateDescriptor;
 import com.weirddev.testme.intellij.template.TemplateRegistry;
 import com.weirddev.testme.intellij.ui.popup.ConfigurationLinkAction;
@@ -43,18 +44,17 @@ public class TestMeActionHandler extends TestMePopUpHandler {
         this.templateRegistry = templateRegistry;
     }
 
-    @NotNull
+    //    @NotNull
     private static PsiElement getSelectedElement(Editor editor, PsiFile file) {
         return PsiUtilCore.getElementAtOffset(file, editor.getCaretModel().getOffset());
     }
 
     @Nullable
-    @Override
-    protected com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(final Editor editor, final PsiFile file) {
-        PsiElement sourceElement = TestFinderHelper.findSourceElement(getSelectedElement(editor, file));
+    protected com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(final DataContext editor, final PsiFile file) {
+        PsiElement sourceElement = TestFinderHelper.findSourceElement(/*getSelectedElement(editor, file)*/ file);
         if (sourceElement == null) return null;
         List<com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction> actions = new SmartList<com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction>();
-        findNestedClassName(editor, file, (PsiNamedElement) sourceElement);
+        findNestedClassName(file, (PsiNamedElement) sourceElement);
         TestMeTemplateManager fileTemplateManager = TestMeTemplateManager.getInstance(file.getProject());
         List<TemplateDescriptor> templateDescriptors = fileTemplateManager.getTestTemplates();
         for (final TemplateDescriptor templateDescriptor : templateDescriptors) {
@@ -64,18 +64,18 @@ public class TestMeActionHandler extends TestMePopUpHandler {
         return new com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData(sourceElement, actions);
     }
 
-    @NotNull
+
     @Override
-    protected String getChooserTitle(Editor editor, PsiFile file, PsiElement sourceElement) {
+    protected String getChooserTitle(PsiFile file, PsiElement sourceElement) {
         PsiNamedElement namedElement = (PsiNamedElement) sourceElement;
         final String name = namedElement.getName();
-        String nestedClassName = findNestedClassName(editor, file, namedElement);
+        String nestedClassName = null;// findNestedClassName(editor, file, namedElement);
         return TestMeBundle.message("testMe.create.title", nestedClassName != null ? nestedClassName : name);
     }
 
-    private String findNestedClassName(Editor editor, PsiFile file, PsiNamedElement sourceElement) {
+    private String findNestedClassName(PsiFile file, PsiNamedElement sourceElement) {
         String alternativeSourceName = null;
-        PsiElement element = TestSubjectResolverUtils.getTestableElement(editor, file);
+        PsiElement element = TestSubjectResolverUtils.getTestableElement(file);
         if (element != null) {
             PsiClass containingClass = CreateTestMeAction.getContainingClass(element);
             if (containingClass != null) {
@@ -95,7 +95,7 @@ public class TestMeActionHandler extends TestMePopUpHandler {
 
     @NotNull
     @Override
-    protected String getNotFoundMessage(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+    protected String getNotFoundMessage(@NotNull Project project, @NotNull DataContext editor, @NotNull PsiFile file) {
         return CodeInsightBundle.message("goto.test.notFound");
     }
 

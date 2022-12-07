@@ -1,15 +1,19 @@
 package com.weirddev.testme.intellij.action.muti;
 
-import com.intellij.codeInsight.CodeInsightActionHandler;
-import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.ide.util.EditSourceUtil;
 import com.intellij.ide.util.PsiElementListCellRenderer;
+import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationDisplayType;
+import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.Notifications;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.IndexNotReadyException;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.PopupChooserBuilder;
 import com.intellij.openapi.util.Computable;
@@ -23,9 +27,10 @@ import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.usages.UsageView;
 import com.intellij.util.Function;
+import com.weirddev.testme.intellij.action.muti.popup.TestMeActionCellRenderer;
 import com.weirddev.testme.intellij.icon.IconTokensReplacerImpl;
 import com.weirddev.testme.intellij.icon.TemplateNameFormatter;
-import com.weirddev.testme.intellij.ui.popup.TestMeActionCellRenderer;
+
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +40,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
-public abstract class TestMePopUpHandler implements CodeInsightActionHandler {
+public abstract class TestMePopUpHandler {
     private static final PsiElementListCellRenderer ourDefaultTargetElementRenderer = new com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.DefaultPsiElementListCellRenderer();
     private final DefaultListCellRenderer myActionElementRenderer = new TestMeActionCellRenderer(new TemplateNameFormatter(), new IconTokensReplacerImpl()); // todo DI
 
@@ -53,17 +58,19 @@ public abstract class TestMePopUpHandler implements CodeInsightActionHandler {
         }
     }
 
-    @Override
+    //    @Override
     public boolean startInWriteAction() {
         return false;
     }
 
-    @Override
-    public void invoke(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+    //    @Override
+    public void invoke(@NotNull Project project, /*@NotNull*/ DataContext editor, List<PsiFile> files) {
 //    FeatureUsageTracker.FileTemplateConfig().triggerFeatureUsed(getFeatureUsedKey()); //todo register a ProductivityFeaturesProvider extension
 
+        var file = files.get(0);
         try {
-            com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData = getSourceAndTargetElements(editor, file);
+            com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData =
+                    getSourceAndTargetElements(editor, file);
             if (gotoData != null) {
                 show(project, editor, file, gotoData);
             }
@@ -76,19 +83,26 @@ public abstract class TestMePopUpHandler implements CodeInsightActionHandler {
     protected abstract String getFeatureUsedKey();
 
     @Nullable
-    protected abstract com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(Editor editor, PsiFile file);
+    protected abstract com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(DataContext editor, PsiFile file);
+
+    protected void showError(String message) {
+        NotificationGroup notificationGroup = new NotificationGroup("testid", NotificationDisplayType.BALLOON, false);
+        Notification notification = notificationGroup.createNotification(message, MessageType.ERROR);
+        Notifications.Bus.notify(notification);
+    }
 
     private void show(@NotNull final Project project,
-                      @NotNull Editor editor,
+            /* @NotNull */DataContext editor,
                       @NotNull PsiFile file,
                       @NotNull final com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData) {
         final List<com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction> additionalActions = gotoData.additionalActions;
 
         if (additionalActions.isEmpty()) {
-            HintManager.getInstance().showErrorHint(editor, getNotFoundMessage(project, editor, file));
+//            HintManager.getInstance().showErrorHint(editor, getNotFoundMessage(project, editor, file));
+            showError("not found file");
             return;
         }
-        final String title = getChooserTitle(editor, file, gotoData.source);
+        final String title = getChooserTitle(file, gotoData.source);
         final JBListWithHintProvider list = new JBListWithHintProvider(new CollectionListModel<Object>(additionalActions)) {
             @Override
             protected PsiElement getPsiElementForHint(final Object selectedValue) {
@@ -117,7 +131,7 @@ public abstract class TestMePopUpHandler implements CodeInsightActionHandler {
                 List<?> selectedElements = list.getSelectedValuesList();
                 for (Object element : selectedElements) {
                     if (element instanceof com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction) {
-                        ((com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction) element).execute(editor.getProject());
+                        ((com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction) element).execute(CommonDataKeys.PROJECT.getData(editor));
                     } else {
                         Navigatable nav = element instanceof Navigatable ? (Navigatable) element : EditSourceUtil.getDescriptor((PsiElement) element);
                         try {
@@ -174,11 +188,11 @@ public abstract class TestMePopUpHandler implements CodeInsightActionHandler {
         descriptor.navigate(true);
     }
 
-    @NotNull
-    protected abstract String getChooserTitle(Editor editor, PsiFile file, PsiElement sourceElement);
+
+    protected abstract String getChooserTitle(PsiFile file, PsiElement sourceElement);
 
     @NotNull
-    protected abstract String getNotFoundMessage(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file);
+    protected abstract String getNotFoundMessage(@NotNull Project project, @NotNull DataContext editor, @NotNull PsiFile file);
 
     @Nullable
     protected String getAdText(PsiElement source, int length) {
