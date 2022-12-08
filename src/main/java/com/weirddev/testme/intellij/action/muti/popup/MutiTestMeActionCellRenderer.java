@@ -3,6 +3,7 @@ package com.weirddev.testme.intellij.action.muti.popup;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import com.weirddev.testme.intellij.action.muti.MutiTestMeAdditionalAction;
+import com.weirddev.testme.intellij.action.muti.MutiTestMeAdditionalActionList;
 import com.weirddev.testme.intellij.icon.IconTokensReplacer;
 import com.weirddev.testme.intellij.icon.IconTokensReplacerImpl;
 import com.weirddev.testme.intellij.icon.IconizedLabel;
@@ -33,8 +34,8 @@ public class MutiTestMeActionCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (value != null) {
-            if (value instanceof MutiTestMeAdditionalAction) {
-                MutiTestMeAdditionalAction action = (MutiTestMeAdditionalAction) value;
+            if (value instanceof MutiTestMeAdditionalActionList) {
+                MutiTestMeAdditionalActionList action = (MutiTestMeAdditionalActionList) value;
                 JPanel jPanel = createPanel(list, isSelected);
                 if (action.getTokenizedtext() != null) {
                     addFromTokenizedText(list, value, index, isSelected, cellHasFocus, result, action, jPanel);
@@ -55,7 +56,7 @@ public class MutiTestMeActionCellRenderer extends DefaultListCellRenderer {
         return result;
     }
 
-    private void addFromTokenizedText(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus, Component result, MutiTestMeAdditionalAction action, JPanel jPanel) {
+    private void addFromTokenizedText(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus, Component result, MutiTestMeAdditionalActionList action, JPanel jPanel) {
         ArrayList<IconizedLabel> iconizedLabels = iconTokensReplacer.tokenize(action.getTokenizedtext(), action.getIcon());
         for (int i = 0; i < iconizedLabels.size(); i++) {
             if (i == 0) {

@@ -10,10 +10,13 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.*;
+import com.intellij.openapi.vfs.newvfs.impl.VirtualDirectoryImpl;
+import com.intellij.openapi.vfs.newvfs.impl.VirtualFileImpl;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiManager;
 import com.weirddev.testme.intellij.action.muti.MutiTestMeActionHandler;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,42 +29,49 @@ public class CreateAllTest extends AnAction {
 
     @Override
     public void actionPerformed(AnActionEvent e) {
-        NotificationGroup notificationGroup = new NotificationGroup("testid", NotificationDisplayType.BALLOON, false);
-        Notification notification = notificationGroup.createNotification("测试通知", MessageType.ERROR);
-        Notifications.Bus.notify(notification);
+
 
         VirtualFile[] virtualFiles = CommonDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
         //选中节点
-        PsiElement psiElement = CommonDataKeys.PSI_ELEMENT.getData(e.getDataContext());
-        PsiFile psiFile = CommonDataKeys.PSI_FILE.getData(e.getDataContext());
         Project project = CommonDataKeys.PROJECT.getData(e.getDataContext());
+        List<VirtualFile> fileList = findFile(virtualFiles);
         List<PsiFile> psiFiles;
-        if (psiElement != null) {
-            //Project 中先择了 包 或 单个文件
-            if (psiElement instanceof PsiDirectory) {
-//               todo: 这果有 bug ,   可能是还有子文件夹,应继续递归
-                psiFiles = Arrays.stream(psiElement.getChildren())
-                        .filter(x -> x instanceof PsiFile)
-                        .map(x -> (PsiFile) x)
-                        .collect(Collectors.toList());
-            } else if (psiElement instanceof PsiClass) {
-                PsiFile containingFile = psiElement.getContainingFile();
-                psiFiles = Arrays.asList(containingFile);
-            } else {
-                throw new RuntimeException("no file select psiElement");
-            }
+        psiFiles = fileList
+                .stream()
+                .map(x -> PsiManager.getInstance(project).findFile(x))
+                .collect(Collectors.toList());
 
-        } else if (psiFile != null) {
-            psiFiles = Arrays.asList(psiFile);
-        } else if (virtualFiles.length > 1) {
-            // todo ,  这个用来实现一个多选，但是还有Bug，因为 VFS 可能是选了文件夹,应继续递归
-            psiFiles = Arrays.stream(virtualFiles)
-                    .map(x -> PsiManager.getInstance(project).findFile(x))
-                    .collect(Collectors.toList());
-        } else {
-            throw new RuntimeException("no file select");
+        if (psiFiles.size() == 0) {
+            NotificationGroup notificationGroup = new NotificationGroup("testid", NotificationDisplayType.BALLOON, false);
+            Notification notification = notificationGroup.createNotification("未选中文件", MessageType.INFO);
+            Notifications.Bus.notify(notification);
         }
         MutiTestMeActionHandler testMeActionHandler = new MutiTestMeActionHandler();
         testMeActionHandler.invoke(project, e.getDataContext(), psiFiles);
+    }
+
+    private List<VirtualFile> findFile(VirtualFile virtualFile) {
+        List<VirtualFile> list = new ArrayList<>();
+        if (virtualFile instanceof VirtualDirectoryImpl) {
+            VirtualFile[] children = virtualFile.getChildren();
+            list.addAll(findFile(children));
+        } else if (virtualFile instanceof VirtualFileImpl) {
+            list.add(virtualFile);
+        } else {
+
+            var x = virtualFile;
+        }
+
+        return list;
+    }
+
+    private List<VirtualFile> findFile(VirtualFile[] virtualFiles) {
+        List<VirtualFile> list = new ArrayList<>();
+
+        for (VirtualFile virtualFile : virtualFiles) {
+            list.addAll(findFile(virtualFile));
+        }
+
+        return list;
     }
 }

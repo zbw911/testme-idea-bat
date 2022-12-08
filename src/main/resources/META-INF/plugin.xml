@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.weirddev.testme</id>
-    <name>TestMe</name>
+    <name>TestMeBat</name>
     <version>5.1.0</version>
     <vendor email="testme@weirddev.com" url="http://weirddev.com">WeirdDev</vendor>
 

@@ -10,7 +10,7 @@ def enabledPlugins = ['java','junit','properties']
 enabledPlugins = filterPlugins(enabledPlugins)
 
 intellij {
-    pluginName 'TestMe'
+    pluginName 'TestMeBat'
     instrumentCode = shouldInstrumentCode
     version ideaVersion
     type ideaType
