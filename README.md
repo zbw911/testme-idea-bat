@@ -1,3 +1,18 @@
+# 为什么
+ testme 本身是一款足够优秀的单元测试自动生成工具，在这里感谢原作者。
+ 有一些情况，我们需要批量生成单元测试。在此基础上加入批量生成功能。 
+ 
+ 使用 
+ tools -> 批量生成测试
+
+ 2022-12-18 : 现在还有两个问题要解决，
+  * 目录迭代取文件
+  * 菜单显示问题
+
+ 注意 AGPLv3 ，不要变成所谓的自主产权，大家注意。
+
+下面是作者原文.
+
 # TestMe IJ IDEA Plugin
 [![Build Status](https://travis-ci.org/wrdv/testme-idea.svg?branch=master)](https://travis-ci.org/wrdv/testme-idea)
 [![Coverage Status](https://coveralls.io/repos/github/wrdv/testme-idea/badge.svg?branch=master)](https://coveralls.io/github/wrdv/testme-idea?branch=master)
