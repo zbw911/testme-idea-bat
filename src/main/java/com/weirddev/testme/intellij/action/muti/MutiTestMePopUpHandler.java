@@ -65,24 +65,24 @@ public abstract class MutiTestMePopUpHandler {
     //    @Override
     public void invoke(@NotNull Project project, /*@NotNull*/ DataContext editor, List<PsiFile> files) {
 
-        for (PsiFile file : files) {
-            try {
-                com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData =
-                        getSourceAndTargetElements(editor, file);
-                if (gotoData != null) {
-                    show(project, editor, file, gotoData);
-                }
-            } catch (IndexNotReadyException e) {
-                DumbService.getInstance(project).showDumbModeNotification("Test Generation is not available here during index update");
+
+        try {
+            com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData =
+                    getSourceAndTargetElements(editor, files);
+            if (gotoData != null) {
+                show(project, editor, files, gotoData);
             }
+        } catch (IndexNotReadyException e) {
+            DumbService.getInstance(project).showDumbModeNotification("Test Generation is not available here during index update");
         }
+
     }
 
     @NonNls
     protected abstract String getFeatureUsedKey();
 
     @Nullable
-    protected abstract com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(DataContext editor, PsiFile file);
+    protected abstract com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(DataContext editor, List<PsiFile> file);
 
     protected void showError(String message) {
         NotificationGroup notificationGroup = new NotificationGroup("testid", NotificationDisplayType.BALLOON, false);
@@ -91,8 +91,8 @@ public abstract class MutiTestMePopUpHandler {
     }
 
     private void show(@NotNull final Project project,
-            /* @NotNull */DataContext editor,
-                      @NotNull PsiFile file,
+            /* @NotNull */DataContext dataContext,
+                      @NotNull List<PsiFile> file,
                       @NotNull final com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData) {
         final List<com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction> additionalActions = gotoData.additionalActions;
 
@@ -130,7 +130,7 @@ public abstract class MutiTestMePopUpHandler {
                 List<?> selectedElements = list.getSelectedValuesList();
                 for (Object element : selectedElements) {
                     if (element instanceof com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction) {
-                        ((com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction) element).execute(CommonDataKeys.PROJECT.getData(editor));
+                        ((com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction) element).execute(CommonDataKeys.PROJECT.getData(dataContext));
                     } else {
                         Navigatable nav = element instanceof Navigatable ? (Navigatable) element : EditSourceUtil.getDescriptor((PsiElement) element);
                         try {
@@ -179,7 +179,7 @@ public abstract class MutiTestMePopUpHandler {
             //for UT support - otherwise theres a swing error when popup set relative to fake test editor
             popup.showCenteredInCurrentWindow(project);
         } else {
-            popup.showInBestPositionFor(editor);
+            popup.showInBestPositionFor(dataContext);
         }
     }
 
@@ -188,7 +188,7 @@ public abstract class MutiTestMePopUpHandler {
     }
 
 
-    protected abstract String getChooserTitle(PsiFile file, PsiElement sourceElement);
+    protected abstract String getChooserTitle(List<PsiFile> file, PsiElement sourceElement);
 
     @NotNull
     protected abstract String getNotFoundMessage(@NotNull Project project, @NotNull DataContext editor, @NotNull PsiFile file);

@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 public class MutiTestMeCreator {
     private static final Logger LOG = Logger.getInstance(MutiTestMeCreator.class.getName());
 
-    public void createTest(DataContext editor, PsiFile file, TemplateDescriptor templateDescriptor) {
+    public void createTest(DataContext dataContext, PsiFile file, TemplateDescriptor templateDescriptor) {
         try {
-            invoke(file.getProject(), editor, file.getContainingFile(), templateDescriptor);
+            invoke(file.getProject(), dataContext, file.getContainingFile(), templateDescriptor);
         } catch (IncorrectOperationException e) {
             LOG.warn(e);
         }

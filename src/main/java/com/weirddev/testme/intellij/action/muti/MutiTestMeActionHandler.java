@@ -2,6 +2,7 @@ package com.weirddev.testme.intellij.action.muti;
 
 import com.intellij.codeInsight.CodeInsightBundle;
 import com.intellij.codeInsight.navigation.NavigationUtil;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -16,7 +17,6 @@ import com.intellij.testIntegration.TestFinderHelper;
 import com.intellij.util.SmartList;
 import com.weirddev.testme.intellij.TestMeBundle;
 import com.weirddev.testme.intellij.action.CreateTestMeAction;
-
 import com.weirddev.testme.intellij.template.TemplateDescriptor;
 import com.weirddev.testme.intellij.template.TemplateRegistry;
 import com.weirddev.testme.intellij.ui.popup.ConfigurationLinkAction;
@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Date: 10/15/2016
@@ -50,23 +51,36 @@ public class MutiTestMeActionHandler extends MutiTestMePopUpHandler {
     }
 
     @Nullable
-    protected com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(final DataContext editor, final PsiFile file) {
-        PsiElement sourceElement = TestFinderHelper.findSourceElement(/*getSelectedElement(editor, file)*/ file);
-        if (sourceElement == null) return null;
+    protected com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData getSourceAndTargetElements(final DataContext dataContext, final List<PsiFile> file) {
+//        PsiElement sourceElement = TestFinderHelper.findSourceElement(/*getSelectedElement(editor, file)*/ file);
+//        if (sourceElement == null) return null;
+        //过滤不合要求的
+        List<PsiFile> sourcePsiFiles = file.stream()
+                .filter(x -> TestFinderHelper.findSourceElement(x) != null)
+                .collect(Collectors.toList());
+        if (sourcePsiFiles.size() == 0) {
+            return null;
+        }
         List<com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction> actions = new SmartList<com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.AdditionalAction>();
-        findNestedClassName(file, (PsiNamedElement) sourceElement);
-        TestMeTemplateManager fileTemplateManager = TestMeTemplateManager.getInstance(file.getProject());
+//        findNestedClassName(file, (PsiNamedElement) sourceElement);
+        TestMeTemplateManager fileTemplateManager = TestMeTemplateManager.getInstance(CommonDataKeys.PROJECT.getData(dataContext));
         List<TemplateDescriptor> templateDescriptors = fileTemplateManager.getTestTemplates();
         for (final TemplateDescriptor templateDescriptor : templateDescriptors) {
-            actions.add(new MutiTestMeAdditionalAction(templateDescriptor, editor, file));
+            actions.add(new MutiTestMeAdditionalActionList(templateDescriptor, dataContext, file));
         }
         actions.add(new ConfigurationLinkAction());
+        //下面这行先用于兼容 ， todo 再考虑Fix
+        var sourceElement = sourcePsiFiles.get(0);
         return new com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData(sourceElement, actions);
     }
 
 
     @Override
-    protected String getChooserTitle(PsiFile file, PsiElement sourceElement) {
+    protected String getChooserTitle(List<PsiFile> file, PsiElement sourceElement) {
+        if (file.size() > 0) {
+            return TestMeBundle.message("testMe.create.title", "多个File " + file.size());
+
+        }
         PsiNamedElement namedElement = (PsiNamedElement) sourceElement;
         final String name = namedElement.getName();
         String nestedClassName = null;// findNestedClassName(editor, file, namedElement);
