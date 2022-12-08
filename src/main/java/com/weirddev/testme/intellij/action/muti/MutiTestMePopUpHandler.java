@@ -27,10 +27,9 @@ import com.intellij.ui.popup.AbstractPopup;
 import com.intellij.ui.popup.HintUpdateSupply;
 import com.intellij.usages.UsageView;
 import com.intellij.util.Function;
-import com.weirddev.testme.intellij.action.muti.popup.TestMeActionCellRenderer;
+import com.weirddev.testme.intellij.action.muti.popup.MutiTestMeActionCellRenderer;
 import com.weirddev.testme.intellij.icon.IconTokensReplacerImpl;
 import com.weirddev.testme.intellij.icon.TemplateNameFormatter;
-
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,9 +39,9 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
-public abstract class TestMePopUpHandler {
+public abstract class MutiTestMePopUpHandler {
     private static final PsiElementListCellRenderer ourDefaultTargetElementRenderer = new com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.DefaultPsiElementListCellRenderer();
-    private final DefaultListCellRenderer myActionElementRenderer = new TestMeActionCellRenderer(new TemplateNameFormatter(), new IconTokensReplacerImpl()); // todo DI
+    private final DefaultListCellRenderer myActionElementRenderer = new MutiTestMeActionCellRenderer(new TemplateNameFormatter(), new IconTokensReplacerImpl()); // todo DI
 
     private static PsiElementListCellRenderer getRenderer(Object value,
                                                           Map<Object, PsiElementListCellRenderer> targetsWithRenderers,
@@ -65,17 +64,17 @@ public abstract class TestMePopUpHandler {
 
     //    @Override
     public void invoke(@NotNull Project project, /*@NotNull*/ DataContext editor, List<PsiFile> files) {
-//    FeatureUsageTracker.FileTemplateConfig().triggerFeatureUsed(getFeatureUsedKey()); //todo register a ProductivityFeaturesProvider extension
 
-        var file = files.get(0);
-        try {
-            com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData =
-                    getSourceAndTargetElements(editor, file);
-            if (gotoData != null) {
-                show(project, editor, file, gotoData);
+        for (PsiFile file : files) {
+            try {
+                com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData gotoData =
+                        getSourceAndTargetElements(editor, file);
+                if (gotoData != null) {
+                    show(project, editor, file, gotoData);
+                }
+            } catch (IndexNotReadyException e) {
+                DumbService.getInstance(project).showDumbModeNotification("Test Generation is not available here during index update");
             }
-        } catch (IndexNotReadyException e) {
-            DumbService.getInstance(project).showDumbModeNotification("Test Generation is not available here during index update");
         }
     }
 

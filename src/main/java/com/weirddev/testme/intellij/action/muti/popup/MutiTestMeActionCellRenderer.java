@@ -2,7 +2,7 @@ package com.weirddev.testme.intellij.action.muti.popup;
 
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
-import com.weirddev.testme.intellij.action.muti.TestMeAdditionalAction;
+import com.weirddev.testme.intellij.action.muti.MutiTestMeAdditionalAction;
 import com.weirddev.testme.intellij.icon.IconTokensReplacer;
 import com.weirddev.testme.intellij.icon.IconTokensReplacerImpl;
 import com.weirddev.testme.intellij.icon.IconizedLabel;
@@ -20,11 +20,11 @@ import java.util.ArrayList;
  *
  * @author Yaron Yamin
  */
-public class TestMeActionCellRenderer extends DefaultListCellRenderer {
+public class MutiTestMeActionCellRenderer extends DefaultListCellRenderer {
     private final IconTokensReplacer iconTokensReplacer;
     private final TemplateNameFormatter templateNameFormatter;
 
-    public TestMeActionCellRenderer(TemplateNameFormatter templateNameFormatter, IconTokensReplacerImpl iconTokensReplacer) {
+    public MutiTestMeActionCellRenderer(TemplateNameFormatter templateNameFormatter, IconTokensReplacerImpl iconTokensReplacer) {
         this.templateNameFormatter = templateNameFormatter;
         this.iconTokensReplacer = iconTokensReplacer;
     }
@@ -33,8 +33,8 @@ public class TestMeActionCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         if (value != null) {
-            if (value instanceof TestMeAdditionalAction) {
-                TestMeAdditionalAction action = (TestMeAdditionalAction) value;
+            if (value instanceof MutiTestMeAdditionalAction) {
+                MutiTestMeAdditionalAction action = (MutiTestMeAdditionalAction) value;
                 JPanel jPanel = createPanel(list, isSelected);
                 if (action.getTokenizedtext() != null) {
                     addFromTokenizedText(list, value, index, isSelected, cellHasFocus, result, action, jPanel);
@@ -55,7 +55,7 @@ public class TestMeActionCellRenderer extends DefaultListCellRenderer {
         return result;
     }
 
-    private void addFromTokenizedText(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus, Component result, TestMeAdditionalAction action, JPanel jPanel) {
+    private void addFromTokenizedText(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus, Component result, MutiTestMeAdditionalAction action, JPanel jPanel) {
         ArrayList<IconizedLabel> iconizedLabels = iconTokensReplacer.tokenize(action.getTokenizedtext(), action.getIcon());
         for (int i = 0; i < iconizedLabels.size(); i++) {
             if (i == 0) {

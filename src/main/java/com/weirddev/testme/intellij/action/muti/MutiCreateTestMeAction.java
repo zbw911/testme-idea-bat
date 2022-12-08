@@ -45,19 +45,19 @@ import java.util.List;
  *
  * @see CreateTestAction
  */
-public class CreateTestMeAction extends CreateTestAction {
-    private static final Logger LOG = Logger.getInstance(CreateTestMeAction.class.getName());
+public class MutiCreateTestMeAction extends CreateTestAction {
+    private static final Logger LOG = Logger.getInstance(MutiCreateTestMeAction.class.getName());
     private static final String CREATE_TEST_IN_THE_SAME_ROOT = "create.test.in.the.same.root";
     private final TestMeGenerator testMeGenerator;
     private final GeneratedClassNameResolver generatedClassNameResolver;
     private TemplateDescriptor templateDescriptor;
     private final TargetDirectoryLocator targetDirectoryLocator;
 
-    public CreateTestMeAction(TemplateDescriptor templateDescriptor) {
+    public MutiCreateTestMeAction(TemplateDescriptor templateDescriptor) {
         this(templateDescriptor, new TestMeGenerator(), new TargetDirectoryLocator(), new GeneratedClassNameResolver());
     }
 
-    CreateTestMeAction(TemplateDescriptor templateDescriptor, TestMeGenerator testMeGenerator, TargetDirectoryLocator targetDirectoryLocator, GeneratedClassNameResolver generatedClassNameResolver) {
+    MutiCreateTestMeAction(TemplateDescriptor templateDescriptor, TestMeGenerator testMeGenerator, TargetDirectoryLocator targetDirectoryLocator, GeneratedClassNameResolver generatedClassNameResolver) {
         this.testMeGenerator = testMeGenerator;
         this.generatedClassNameResolver = generatedClassNameResolver;
         this.templateDescriptor = templateDescriptor;

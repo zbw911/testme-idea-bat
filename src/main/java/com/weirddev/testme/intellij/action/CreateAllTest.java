@@ -11,6 +11,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.weirddev.testme.intellij.action.muti.MutiTestMeActionHandler;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,7 +61,7 @@ public class CreateAllTest extends AnAction {
         } else {
             throw new RuntimeException("no file select");
         }
-        com.weirddev.testme.intellij.action.muti.TestMeActionHandler testMeActionHandler = new com.weirddev.testme.intellij.action.muti.TestMeActionHandler();
+        MutiTestMeActionHandler testMeActionHandler = new MutiTestMeActionHandler();
         testMeActionHandler.invoke(project, e.getDataContext(), psiFiles);
     }
 }

@@ -33,14 +33,14 @@ import java.util.List;
  * @author Yaron Yamin
  * @see GotoTestOrCodeHandler
  */
-public class TestMeActionHandler extends TestMePopUpHandler {
+public class MutiTestMeActionHandler extends MutiTestMePopUpHandler {
     private TemplateRegistry templateRegistry;
 
-    public TestMeActionHandler() {
+    public MutiTestMeActionHandler() {
         this(new TemplateRegistry());
     }
 
-    TestMeActionHandler(TemplateRegistry templateRegistry) {
+    MutiTestMeActionHandler(TemplateRegistry templateRegistry) {
         this.templateRegistry = templateRegistry;
     }
 
@@ -58,7 +58,7 @@ public class TestMeActionHandler extends TestMePopUpHandler {
         TestMeTemplateManager fileTemplateManager = TestMeTemplateManager.getInstance(file.getProject());
         List<TemplateDescriptor> templateDescriptors = fileTemplateManager.getTestTemplates();
         for (final TemplateDescriptor templateDescriptor : templateDescriptors) {
-            actions.add(new TestMeAdditionalAction(templateDescriptor, editor, file));
+            actions.add(new MutiTestMeAdditionalAction(templateDescriptor, editor, file));
         }
         actions.add(new ConfigurationLinkAction());
         return new com.weirddev.testme.intellij.ui.popup.TestMePopUpHandler.GotoData(sourceElement, actions);

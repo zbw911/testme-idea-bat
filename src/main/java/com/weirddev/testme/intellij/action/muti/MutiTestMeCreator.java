@@ -17,8 +17,8 @@ import org.jetbrains.annotations.NotNull;
  * @author Yaron Yamin
  * @see JavaTestCreator
  */
-public class TestMeCreator {
-    private static final Logger LOG = Logger.getInstance(TestMeCreator.class.getName());
+public class MutiTestMeCreator {
+    private static final Logger LOG = Logger.getInstance(MutiTestMeCreator.class.getName());
 
     public void createTest(DataContext editor, PsiFile file, TemplateDescriptor templateDescriptor) {
         try {
@@ -32,7 +32,7 @@ public class TestMeCreator {
         if (!file.getManager().isInProject(file)) return;
         final PsiElement element = TestSubjectResolverUtils.getTestableElement(file);
         if (element != null) {
-            new CreateTestMeAction(templateDescriptor).invoke(project, null, element);
+            new MutiCreateTestMeAction(templateDescriptor).invoke(project, null, element);
         }
     }
 
