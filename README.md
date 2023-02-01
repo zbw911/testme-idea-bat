@@ -8,6 +8,10 @@
  使用 方法 ：
  tools -> 批量生成测试
 
+  下载 ： (https://github.com/zbw911/testme-idea-bat/releases/download/v5.1.0.Bat/TestMeBat-5.1.0.zip)
+   也可以 自己Clone项目，再Build。
+ 
+  以 idea 插件本地化方式进行安装 。
  
 
  注意 AGPLv3 ，不要变成所谓的自主产权，大家注意。
