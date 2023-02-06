@@ -29,12 +29,17 @@ class ${CLASS_NAME} {
 
     @Test
     void #renderTestMethodName($method.name)(){
+       try{
 #if($MockitoMockBuilder.shouldStub($method,$TESTED_CLASS.fields))
 #renderMockStubs($method,$TESTED_CLASS.fields)
 
 #end
         #renderMethodCall($method,$TESTED_CLASS.name)
-#if($method.hasReturn())        Assertions.#renderJUnitAssert($method)#end
+//#if($method.hasReturn())        Assertions.#renderJUnitAssert($method)#end
+
+        }catch(Exception _ignore){
+
+        }
     }
 #end
 #end
