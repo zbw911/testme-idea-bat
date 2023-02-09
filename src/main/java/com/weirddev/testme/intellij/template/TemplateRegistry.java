@@ -40,20 +40,20 @@ public class TemplateRegistry {
         templateDescriptors.add(new TemplateDescriptor("<html><i>JUnit4</i>" + TemplateIcons.JUnit4.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
                 "<html><i>JUnit4</i></html><JUnit4><html>& <i>Mockito</i></html><Mockito>",
                 JUNIT4_MOCKITO_JAVA_TEMPLATE, Language.Java, TemplateRole.Tester));
-        templateDescriptors.add(new TemplateDescriptor("<html><i>JUnit4 NO EXCEPTION</i>" + TemplateIcons.JUnit4.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
-                "<html><i>JUnit4 NO EXCEPTION</i></html><JUnit4><html>& <i>Mockito</i></html><Mockito>",
+        templateDescriptors.add(new TemplateDescriptor("<html><i>JUnit4 IGNORE EXCEPTION</i>" + TemplateIcons.JUnit4.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
+                "<html><i>JUnit4 IGNORE EXCEPTION</i></html><JUnit4><html>& <i>Mockito</i></html><Mockito>",
                 JUNIT4_MOCKITO_NO_EXCEPTION_JAVA_TEMPLATE, Language.Java, TemplateRole.Tester));
         templateDescriptors.add(new TemplateDescriptor("<html><i>JUnit5</i>" + TemplateIcons.JUnit5.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
                 "<html><i>JUnit5</i></html><JUnit5><html>& <i>Mockito</i></html><Mockito>",
                 JUNIT5_MOCKITO_JAVA_TEMPLATE, Language.Java, TemplateRole.Tester));
-        templateDescriptors.add(new TemplateDescriptor("<html><i>JUnit5 NO EXCEPTION</i>" + TemplateIcons.JUnit5.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
-                "<html><i>JUnit5 NO EXCEPTION</i></html><JUnit5><html>& <i>Mockito</i></html><Mockito>",
+        templateDescriptors.add(new TemplateDescriptor("<html><i>JUnit5 IGNORE EXCEPTION</i>" + TemplateIcons.JUnit5.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
+                "<html><i>JUnit5 IGNORE EXCEPTION</i></html><JUnit5><html>& <i>Mockito</i></html><Mockito>",
                 JUNIT5_MOCKITO_NO_EXCEPTION_JAVA_TEMPLATE, Language.Java, TemplateRole.Tester));
         templateDescriptors.add(new TemplateDescriptor("<html><i>TestNG </i>" + TemplateIcons.TestNG.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
                 "<html><i>TestNG </i></html><TestNG><html>& <i>Mockito</i></html><Mockito>",
                 TESTNG_MOCKITO_JAVA_TEMPLATE, Language.Java, TemplateRole.Tester));
-        templateDescriptors.add(new TemplateDescriptor("<html><i>TestNG NO EXCEPTION</i>" + TemplateIcons.TestNG.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
-                "<html><i>TestNG  NO EXCEPTION</i></html><TestNG><html>& <i>Mockito</i></html><Mockito>",
+        templateDescriptors.add(new TemplateDescriptor("<html><i>TestNG IGNORE EXCEPTION</i>" + TemplateIcons.TestNG.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
+                "<html><i>TestNG  IGNORE EXCEPTION</i></html><TestNG><html>& <i>Mockito</i></html><Mockito>",
                 TESTNG_MOCKITO_NO_EXCEPTION_JAVA_TEMPLATE, Language.Java, TemplateRole.Tester));
         templateDescriptors.add(new TemplateDescriptor("<html><i>Groovy</i>" + TemplateIcons.Groovy.asHtml() + "<i>JUnit4</i>" + TemplateIcons.JUnit4.asHtml() + "& <i>Mockito</i>" + TemplateIcons.Mockito.asHtml() + "</html>",
                 "<html><i>Groovy</i></html><Groovy><html><i>JUnit4</i></html><JUnit4><html>& <i>Mockito</i></html><Mockito>",
