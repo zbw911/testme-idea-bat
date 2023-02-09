@@ -8,7 +8,7 @@
  使用 方法 ：
  tools -> 批量生成测试
 
-  1. 下载 ： (https://github.com/zbw911/testme-idea-bat/releases/download/v5.1.0.Bat/TestMeBat-5.1.0.zip)
+  1. 下载 ： (https://github.com/zbw911/testme-idea-bat/releases   选那个 TestMe-...zip , 直接拖拽到 idea 就可以安装 ，如果已经安装过，可以先把原来的卸载)
   
    也可以 自己Clone项目，再Build。
  
